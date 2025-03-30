@@ -2,15 +2,13 @@ import os
 from aiogram import Router, types, Bot, Dispatcher
 from aiogram.types import Message, InputFile, CallbackQuery
 from aiogram.filters import Command
-from aiogram.types import FSInputFile
 
-# from app.database.requests import (
-#
-# )
+
+
 from app.config import load_config
-from io import BytesIO
 
-from second_try.app.database.requests import dump_discipline
+
+from app.database.requests import dump_discipline
 
 router = Router()
 config = load_config()
