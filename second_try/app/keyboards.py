@@ -2,7 +2,7 @@ from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton,
                            InlineKeyboardMarkup, InlineKeyboardButton)
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from app.database.requests import get_all, get_types, get_subgroups
+# from app.database.requests import get_all, get_types, get_subgroups
 
 # async def keyboard_all():
 #     all_categories = await get_all()

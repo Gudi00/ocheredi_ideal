@@ -162,9 +162,7 @@ async def get_list(discipline_id: int) -> int:
                 users_result = await session.execute(users_query)
                 users = users_result.scalars().all()
 
-                # Шаг 2: Формируем список пользователей с want == 1 для данной дисциплины
-                response_lines = []
-                student_count = 0  # Счетчик для нумерации студентов
+                
 
                 for user in users:
                     # Проверяем запись в UserDiscipline

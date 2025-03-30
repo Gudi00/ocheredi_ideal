@@ -35,6 +35,7 @@ async def start_command(message: Message):
 
 @router.callback_query(F.data == "temp_events")
 async def temporary_events(callback: CallbackQuery, state: FSMContext):
+    await callback.answer('X_X')
     await callback.message.answer("Введите ваше имя:")
     await state.set_state(Form.waiting_for_name)
 
@@ -51,7 +52,7 @@ async def get_surname(message: Message, state: FSMContext):
     surname = message.text
     username = message.from_user.username
 
-    await add_temporary_event_user(username, name, surname)
+    # await add_temporary_event_user(username, name, surname)
     await message.answer(f"Вы записаны на временное мероприятие как {name} {surname}.")
     await state.clear()
 
@@ -65,10 +66,12 @@ async def subgroups_selected(callback: CallbackQuery):
         [InlineKeyboardButton(text="Физика (1 группа)", callback_data="activity_subgroup_5")],
         [InlineKeyboardButton(text="Физика (2 группа)", callback_data="activity_subgroup_6")]
     ])
+    await callback.answer('X_X')
     await callback.message.answer("Выберите занятие по подгруппам:", reply_markup=keyboard)
 
 @router.callback_query(lambda c: c.data == "joint_pairs")
 async def joint_pairs_selected(callback: CallbackQuery):
+    await callback.answer('X_X')
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="СПО", callback_data="activity_joint_1")],
         [InlineKeyboardButton(text="ОАиП", callback_data="activity_joint_2")]
@@ -77,6 +80,7 @@ async def joint_pairs_selected(callback: CallbackQuery):
 
 @router.callback_query(lambda c: c.data.startswith("activity_"))
 async def activity_selected(callback: CallbackQuery):
+    await callback.answer('X_X')
     parts = callback.data.split("_")
     activity_type = parts[1]  # subgroup или joint
     activity_id = int(parts[2])
@@ -93,6 +97,7 @@ async def activity_selected(callback: CallbackQuery):
 
 @router.callback_query(lambda c: c.data.startswith("show_list_"))
 async def show_list_handler(callback: CallbackQuery):
+    await callback.answer('X_X')
     parts = callback.data.split("_")
     activity_type = parts[2]
     activity_id = int(parts[3])
@@ -101,6 +106,7 @@ async def show_list_handler(callback: CallbackQuery):
 
 @router.callback_query(lambda c: c.data.startswith("want_"))
 async def save_preference(callback: CallbackQuery):
+    await callback.answer('X_X')
     parts = callback.data.split("_")
     activity_type = parts[1]
     activity_id = int(parts[2])
