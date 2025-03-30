@@ -23,18 +23,24 @@ from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 
 router = Router()
 
-@router.message(Command("start"))
-async def start_command(message: Message):
-    await message.answer("Это бот для очередей)\nЧтобы занять очередь на любой предмет нужно выбрать один из пунктов меню, под следующем сообщением. И далее выбрать нужный предмет и подгруппу.\n\nЕсли нажать на кнопку 'ДА', значит вы планируете отвечать на слудующей паре по этому предмету, 'НЕТ' - не планируете ответчать.\n\nЕсли будут вопросы, пишите @misha_iosko")
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+main = InlineKeyboardMarkup(inline_keyboard=[
         # [InlineKeyboardButton(text="Временные мероприятия", callback_data="temp_events")],
         [InlineKeyboardButton(text="Занятия по подгруппам", callback_data="subgroups")],
         [InlineKeyboardButton(text="Совместные пары", callback_data="joint_pairs")]
     ])
-    await message.answer("Выберите тип мероприятия:", reply_markup=keyboard)
+
+@router.message(Command("start"))
+async def start_command(message: Message):
+    await message.answer("Это бот для очередей)\nЧтобы занять очередь на любой предмет нужно выбрать один из пунктов меню, под следующем сообщением. И далее выбрать нужный предмет и подгруппу.\n\nЕсли нажать на кнопку 'ДА', значит вы планируете отвечать на слудующей паре по этому предмету, 'НЕТ' - не планируете ответчать.\n\nЕсли будут вопросы, пишите @misha_iosko")
+    await message.answer("Выберите тип мероприятия:", reply_markup=main)
     admin_chat_id = config['ADMIN_CHAT_ID']
     await message.bot.send_message(admin_chat_id,
                                    f"Новый пользователь @{message.from_user.username} ({message.from_user.id}) начал использовать бота.")
+
+@router.callback_query(F.data == "to_main")
+async def to_main(callback: CallbackQuery):
+    await callback.answer("Вы вернулись в стартовое меню")
+    await callback.message.answer("Выберите тип мероприятия:", reply_markup=main)
 
 @router.callback_query(F.data == "temp_events")
 async def temporary_events(callback: CallbackQuery, state: FSMContext):
@@ -67,7 +73,8 @@ async def subgroups_selected(callback: CallbackQuery):
         [InlineKeyboardButton(text="ОАиП (1 группа)", callback_data="activity_subgroup_3")],
         [InlineKeyboardButton(text="ОАиП (2 группа)", callback_data="activity_subgroup_4")],
         [InlineKeyboardButton(text="Физика (1 группа)", callback_data="activity_subgroup_5")],
-        [InlineKeyboardButton(text="Физика (2 группа)", callback_data="activity_subgroup_6")]
+        [InlineKeyboardButton(text="Физика (2 группа)", callback_data="activity_subgroup_6")],
+        [InlineKeyboardButton(text="На главную", callback_data="to_main")]
     ])
     await callback.answer('X_X')
     await callback.message.answer("Выберите занятие по подгруппам:", reply_markup=keyboard)
@@ -77,7 +84,8 @@ async def joint_pairs_selected(callback: CallbackQuery):
     await callback.answer('X_X')
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="СПО", callback_data="activity_joint_1")],
-        [InlineKeyboardButton(text="ОАиП", callback_data="activity_joint_2")]
+        [InlineKeyboardButton(text="ОАиП", callback_data="activity_joint_2")],
+        [InlineKeyboardButton(text="На главную", callback_data="to_main")]
     ])
     await callback.message.answer("Выберите совместное занятие:", reply_markup=keyboard)
 
@@ -91,7 +99,8 @@ async def activity_selected(callback: CallbackQuery):
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Показать список", callback_data=f"show_list_{activity_type}_{activity_id}")],
         [InlineKeyboardButton(text="ДА", callback_data=f"want_{activity_type}_{activity_id}_1")],
-        [InlineKeyboardButton(text="НЕТ", callback_data=f"want_{activity_type}_{activity_id}_0")]
+        [InlineKeyboardButton(text="НЕТ", callback_data=f"want_{activity_type}_{activity_id}_0")],
+        [InlineKeyboardButton(text="На главную", callback_data="to_main")]
     ])
     await callback.message.answer(f"Вы выбрали '{activity_name}'. Что дальше?", reply_markup=keyboard)
 

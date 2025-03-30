@@ -131,14 +131,40 @@ async def get_list(discipline_id: int) -> int:
         last_student = int(temp.last_user)
         start_id = int(temp.first)
         end_id = int(temp.last)
-        # Шаг 1: Получаем пользователей из промежутка start_id до end_id
-        users_query = select(User).where(User.id.between(last_student+1, end_id))
-        users_result = await session.execute(users_query)
-        users = users_result.scalars().all()
-
         # Шаг 2: Формируем список пользователей с want == 1 для данной дисциплины
         response_lines = []
         student_count = 0  # Счетчик для нумерации студентов
+        # Шаг 1: Получаем пользователей из промежутка start_id до end_id
+        if last_student != end_id:
+            users_query = select(User).where(User.id.between(last_student+1, end_id))
+            users_result = await session.execute(users_query)
+            users = users_result.scalars().all()
+
+
+
+            for user in users:
+                # Проверяем запись в UserDiscipline
+                ud_query = select(UserDiscipline).where(
+                    UserDiscipline.username == user.username,
+                    UserDiscipline.discipline_id == discipline_id
+                )
+                ud_result = await session.execute(ud_query)
+                user_discipline = ud_result.scalars().first()
+
+                # Если запись существует и want == True, добавляем пользователя в список
+                if user_discipline and user_discipline.want:
+                    student_count += 1
+                    response_lines.append(f"{student_count}. {user.first_name} {user.last_name}")
+
+
+
+#############################
+        # Шаг 1: Получаем пользователей из промежутка start_id до end_id
+        users_query = select(User).where(User.id.between(start_id, last_student))
+        users_result = await session.execute(users_query)
+        users = users_result.scalars().all()
+
+
 
         for user in users:
             # Проверяем запись в UserDiscipline
@@ -153,30 +179,6 @@ async def get_list(discipline_id: int) -> int:
             if user_discipline and user_discipline.want:
                 student_count += 1
                 response_lines.append(f"{student_count}. {user.first_name} {user.last_name}")
-
-
-
-#############################
-                # Шаг 1: Получаем пользователей из промежутка start_id до end_id
-                users_query = select(User).where(User.id.between(start_id, last_student))
-                users_result = await session.execute(users_query)
-                users = users_result.scalars().all()
-
-                
-
-                for user in users:
-                    # Проверяем запись в UserDiscipline
-                    ud_query = select(UserDiscipline).where(
-                        UserDiscipline.username == user.username,
-                        UserDiscipline.discipline_id == discipline_id
-                    )
-                    ud_result = await session.execute(ud_query)
-                    user_discipline = ud_result.scalars().first()
-
-                    # Если запись существует и want == True, добавляем пользователя в список
-                    if user_discipline and user_discipline.want:
-                        student_count += 1
-                        response_lines.append(f"{student_count}. {user.first_name} {user.last_name}")
 
         # Шаг 3: Формируем итоговый ответ
         if not response_lines:
