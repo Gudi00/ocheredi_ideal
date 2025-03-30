@@ -113,7 +113,10 @@ async def show_list_handler(callback: CallbackQuery):
     parts = callback.data.split("_")
     activity_type = parts[2]
     activity_id = int(parts[3])
-    list_result = await get_list(activity_id)
+    new = activity_id
+    if activity_type == 'joint':
+        new += 6
+    list_result = await get_list(new)
     await callback.message.answer(f"Список для {await get_activity_name(activity_type, activity_id)}:\n{list_result}")
 
 @router.callback_query(lambda c: c.data.startswith("want_"))
@@ -122,8 +125,12 @@ async def save_preference(callback: CallbackQuery):
     parts = callback.data.split("_")
     activity_type = parts[1]
     activity_id = int(parts[2])
+    new = activity_id
+    if activity_type == 'joint':
+        new += 6
+
     want = int(parts[3])
-    await update_user_want(callback.from_user.id, callback.from_user.username, activity_id, want)
+    await update_user_want(callback.from_user.id, callback.from_user.username, new, want)
     activity_name = await get_activity_name(activity_type, activity_id)
     await callback.message.answer(f"Ваш выбор для '{activity_name}' сохранен: {'ДА' if want else 'НЕТ'}")
 
