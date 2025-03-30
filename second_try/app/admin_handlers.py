@@ -12,8 +12,8 @@ from app.database.requests import dump_discipline
 
 router = Router()
 config = load_config()
-bot = Bot(token=config['BOT_TOKEN'])
-ADMIN_CHAT_ID = config['ADMIN_CHAT_ID']
+
+admin_chat_id = config['ADMIN_CHAT_ID']
 
 # @router.message(Command("add_discipline"))
 # async def add_discipline_command(message: Message):
@@ -30,7 +30,7 @@ ADMIN_CHAT_ID = config['ADMIN_CHAT_ID']
 @router.message(Command("dump"))
 async def dump_command(message: Message):
     # Проверяем, что пользователь — админ
-    if str(message.from_user.id) != config["ADMIN_CHAT_ID"]:
+    if str(message.from_user.id) != admin_chat_id:
         await message.answer("Эта команда доступна только администратору!")
         return
 

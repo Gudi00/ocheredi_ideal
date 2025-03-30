@@ -32,6 +32,9 @@ async def start_command(message: Message):
         [InlineKeyboardButton(text="Совместные пары", callback_data="joint_pairs")]
     ])
     await message.answer("Выберите тип мероприятия:", reply_markup=keyboard)
+    admin_chat_id = config['ADMIN_CHAT_ID']
+    await message.bot.send_message(admin_chat_id,
+                                   f"Новый пользователь @{message.from_user.username} ({message.from_user.id}) начал использовать бота.")
 
 @router.callback_query(F.data == "temp_events")
 async def temporary_events(callback: CallbackQuery, state: FSMContext):
