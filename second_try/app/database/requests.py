@@ -3,7 +3,7 @@ import random
 from sqlalchemy import select, update
 from app.database.models import async_session, User, TemporaryEvent
 
-from second_try.app.database.models import Discipline, UserDiscipline
+from app.database.models import Discipline, UserDiscipline
 
 
 async def add_temporary_event_user(username: str, first_name: str, last_name: str):

@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 
 from app.config import load_config
-from app.database.requests import add_temporary_event_user
+# from app.database.requests import add_temporary_event_user
 
 from second_try.app.database.requests import update_user_want, get_activity_name, get_list, add_user_to_db
 
