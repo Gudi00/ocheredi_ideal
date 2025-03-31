@@ -102,7 +102,7 @@ async def activity_selected(callback: CallbackQuery):
         [InlineKeyboardButton(text="НЕТ", callback_data=f"want_{activity_type}_{activity_id}_0")],
         [InlineKeyboardButton(text="На главную", callback_data="to_main")]
     ])
-    await callback.message.answer(f"Вы выбрали '{activity_name}'. Что дальше?", reply_markup=keyboard)
+    await callback.message.answer(f"Вы хотите отвечать на следующей паре по {activity_name}", reply_markup=keyboard)
 
 
 
