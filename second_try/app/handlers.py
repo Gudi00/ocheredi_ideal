@@ -109,7 +109,7 @@ async def activity_selected(callback: CallbackQuery):
 
 @router.callback_query(lambda c: c.data.startswith("show_list_"))
 async def show_list_handler(callback: CallbackQuery):
-    await callback.answer('X_X')
+    await callback.answer('(👉ﾟヮﾟ)👉')
     parts = callback.data.split("_")
     activity_type = parts[2]
     activity_id = int(parts[3])
